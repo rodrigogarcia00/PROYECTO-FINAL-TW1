@@ -14,7 +14,7 @@ public class Usuario {
 	private String nombre;
 	private String email;
 	private String password;
-	private String rol;
+	private Rol rol;
 	private String pais;
 	private String provincia;
 	private String ciudad;
@@ -43,10 +43,10 @@ public class Usuario {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getRol() {
+	public Rol getRol() {
 		return rol;
 	}
-	public void setRol(String rol) {
+	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
 	public String getPais() {

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioUsuario;
+import ar.edu.unlam.tallerweb1.servicios.UsuarioYaRegistradoException;
 
 @Controller
 public class ControladorUsuario {
@@ -46,15 +47,34 @@ public class ControladorUsuario {
 	}
 	
 
-	@RequestMapping(path = "/home", method = RequestMethod.GET)
-	public ModelAndView irAHome() {
-			return new ModelAndView("home");
-		}
-
 		
 	@RequestMapping(path = "/", method = RequestMethod.GET)
 	public ModelAndView inicio() {
 			return new ModelAndView("redirect:/login");
 		}
+	
+	
+	@RequestMapping(path="/registrar-usuario")
+	public ModelAndView irARegistrarUsuario() {
+		
+		return new ModelAndView("registrar-usuario");
+		
+	}
+	
+
+	@RequestMapping(path="/registrar-usuario", method=RequestMethod.POST)
+	public ModelAndView validarRegistarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
+		ModelMap modelo = new ModelMap();
+		
+		try {
+			servicioUsuario.registrarUsuario(usuario);
+		}catch(UsuarioYaRegistradoException e) {
+			modelo.put("error", "El usuario ya esta registrado");
+			return new ModelAndView("registrar-usuario",modelo);
+		}
+		
+		return new ModelAndView("registrar-usuario");
+		
+	}
 
 }

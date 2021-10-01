@@ -1,11 +1,15 @@
 package ar.edu.unlam.tallerweb1.servicios;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import ar.edu.unlam.tallerweb1.modelo.Perfil;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
+import ar.edu.unlam.tallerweb1.repositorios.RepositorioPerfil;
 import ar.edu.unlam.tallerweb1.repositorios.RepositorioUsuario;
 
 @Service
@@ -14,11 +18,22 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 	
 	@Inject
 	private RepositorioUsuario repositorioUsuario;
+	
+	@Inject
+	private RepositorioPerfil repositorioPerfil;
 
 	@Override
 	public Usuario registrarUsuario(Usuario usuario) {
-		return repositorioUsuario.registrarUsuario(usuario);
-		
+		if(repositorioUsuario.consultarUsuarioPorEmail(usuario.getEmail())!=null) {
+			throw new UsuarioYaRegistradoException();
+		}
+			Perfil perfil = new Perfil();
+			perfil.setUsuario(usuario);
+			
+			repositorioPerfil.guardarPerfil(perfil);
+			
+			return repositorioUsuario.registrarUsuario(usuario);
+			
 	}
 
 	@Override
@@ -43,6 +58,16 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 	public void eliminarUsuario(Usuario usuario) {
 		repositorioUsuario.eliminarUsuario(usuario);
 		
+	}
+
+	@Override
+	public List<Usuario> consultarUsuarios() {
+		return repositorioUsuario.consultarUsuarios();
+	}
+
+	@Override
+	public Usuario consultarUsuarioPorId(Long id) {
+		return repositorioUsuario.consultarUsuarioPorId(id);
 	}
 
 }

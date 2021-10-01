@@ -1,26 +1,22 @@
 package ar.edu.unlam.tallerweb1.repositorios;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-// implelemtacion del repositorio de usuarios, la anotacion @Repository indica a Spring que esta clase es un componente que debe
-// ser manejado por el framework, debe indicarse en applicationContext que busque en el paquete ar.edu.unlam.tallerweb1.dao
-// para encontrar esta clase.
+
 @Repository("repositorioUsuario")
 public class RepositorioUsuarioImpl implements RepositorioUsuario {
 
-	// Maneja acciones de persistencia, normalmente estara inyectado el session factory de hibernate
-	// el mismo esta difinido en el archivo hibernateContext.xml
+	@Inject
 	private SessionFactory sessionFactory;
-
-    @Autowired
-	public RepositorioUsuarioImpl(SessionFactory sessionFactory){
-		this.sessionFactory = sessionFactory;
-	}
 
 	@Override
 	public Usuario consultarUsuarioPorEmailYPassword(String email, String password) {
@@ -56,6 +52,17 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
 	public void eliminarUsuario(Usuario usuario) {
 		sessionFactory.getCurrentSession().delete(usuario);
 		
+	}
+
+	@Override
+	public List<Usuario> consultarUsuarios() {
+		return sessionFactory.getCurrentSession().createCriteria(Usuario.class).list();
+		
+	}
+
+	@Override
+	public Usuario consultarUsuarioPorId(Long id) {
+		return sessionFactory.getCurrentSession().get(Usuario.class, id);
 	}
 
 }

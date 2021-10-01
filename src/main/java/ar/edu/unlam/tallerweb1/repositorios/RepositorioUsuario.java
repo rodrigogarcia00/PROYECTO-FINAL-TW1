@@ -17,4 +17,8 @@ public interface RepositorioUsuario {
 	
 	void eliminarUsuario(Usuario usuario);
 	
+	List<Usuario> consultarUsuarios();
+
+	Usuario consultarUsuarioPorId(Long id);
+	
 }
